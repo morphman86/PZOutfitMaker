@@ -1,9 +1,10 @@
 import os
 import xml.etree.ElementTree as ET
 
-class PZXMLGuidReader:
-    def __init__(self):
-        self.folder_path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\ProjectZomboid\\media\\clothing\\clothingItems"
+class FileReader:
+    def __init__(self, path):
+        self.folder_path = path
+        # self.folder_path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\ProjectZomboid\\media\\clothing\\clothingItems"
 
     def read_guids(self):
         results = []
@@ -22,3 +23,4 @@ class PZXMLGuidReader:
                 except ET.ParseError:
                     continue  # skip files that can't be parsed
         return results
+    
