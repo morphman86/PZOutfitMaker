@@ -16,8 +16,8 @@ class PZOutfitMaker(tk.Tk):
         # Menu
         menubar = Menu(self)
         # filemenu = Menu(menubar, tearoff=0)
-        menubar.add_command(label="Import", command=self.load)
-        menubar.add_command(label="Save Outfit", command=self.save_outfit)
+        menubar.add_command(label="Import Clothes", command=self.load)
+        menubar.add_command(label="Export Outfit", command=self.save_outfit)
         menubar.add_command(label="Export File Guid Table", command=self.save_guidtable)
         # menubar.add_cascade(label="File", menu=filemenu)
         self.config(menu=menubar)
@@ -107,7 +107,7 @@ class PZOutfitMaker(tk.Tk):
             self.left_listbox.insert(END, item)
     
     def load(self):
-        loadFolder = filedialog.askdirectory()
+        loadFolder = filedialog.askdirectory(title="Folder of clothing items (usually media/clothing/clothingItems)")
         xmlreader = FileReader(loadFolder)
         itemlist = xmlreader.read_guids()  # List of (name, guid)
         for item in itemlist:
