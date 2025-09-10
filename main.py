@@ -15,11 +15,11 @@ class PZOutfitMaker(tk.Tk):
 
         # Menu
         menubar = Menu(self)
-        filemenu = Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Import", command=self.load)
-        filemenu.add_command(label="Save", command=self.save)
-        filemenu.add_command(label="Exit", command=self.quit)
-        menubar.add_cascade(label="File", menu=filemenu)
+        # filemenu = Menu(menubar, tearoff=0)
+        menubar.add_command(label="Import", command=self.load)
+        menubar.add_command(label="Save Outfit", command=self.save_outfit)
+        menubar.add_command(label="Export File Guid Table", command=self.save_guidtable)
+        # menubar.add_cascade(label="File", menu=filemenu)
         self.config(menu=menubar)
 
         # Name Textfield
@@ -115,17 +115,20 @@ class PZOutfitMaker(tk.Tk):
             self.left_listbox.insert(END, item[0])
             self.sort_left_listbox()
 
-    def save(self):
-        # guidlist = self.get_selected_guids()
-        # if not guidlist:
-        #     return
+    def save_outfit(self):
         selected_items = self.right_listbox.get(0, END)
-        file_path_outfit = filedialog.asksaveasfilename(defaultextension=".xml", filetypes=[("XML files", "*.xml")])
         name = self.name_entry.get()
+        writer = FileWriter(name, selected_items, self.itemlist)
+
+        file_path_outfit = filedialog.asksaveasfilename(defaultextension=".xml", filetypes=[("XML files", "*.xml")])
         male = self.male_var.get()
         female = self.female_var.get()
-        writer = FileWriter(name, selected_items, self.itemlist)
         writer.write_outfit(file_path_outfit, male, female)
+
+    def save_guidtable(self):
+        selected_items = self.right_listbox.get(0, END)
+        name = self.name_entry.get()
+        writer = FileWriter(name, selected_items, self.itemlist)
 
         file_path_guidtable = filedialog.asksaveasfilename(defaultextension=".xml", filetypes=[("XML files", "*.xml")])
         writer.write_guidtable(file_path_guidtable)
