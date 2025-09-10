@@ -6,11 +6,10 @@ If you need to use it on any other system, or with PZ installed in any other dir
 
 ## Installation
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/pyutils.git
-    ```
-2. Install dependencies:
+1. Clone the repository or download the files
+2. Install python (if you haven't already)
+3. Navigate to the folder containing `PZOutfitMaker.py` in a terminal.
+4. Install dependencies:
     ```bash
     pip install -r requirements.txt
     ```
