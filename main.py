@@ -1,6 +1,6 @@
 from ctypes import sizeof
 import tkinter as tk
-from tkinter import LAST, Menu, Label, Listbox, Entry, Button, Frame, Checkbutton, Scrollbar, BooleanVar, filedialog, END, SINGLE, MULTIPLE, X, Y, BOTH, RIGHT, LEFT, TOP, VERTICAL
+from tkinter import LAST, Menu, Label, Listbox, Entry, Button, Frame, Checkbutton, Scrollbar, BooleanVar, filedialog, NORMAL, DISABLED, END, SINGLE, MULTIPLE, X, Y, BOTH, RIGHT, LEFT, TOP, VERTICAL
 from src.util.fileReader import FileReader
 from src.util.fileWriter import FileWriter
 
@@ -42,7 +42,7 @@ class PZOutfitMaker(tk.Tk):
         self.checkbox_female = Checkbutton(gender_frame, text="Female", variable=self.female_var)
         self.checkbox_female.pack(side=LEFT)
 
-        # Listboxes and buttons frame
+        # Listboxes frame
         lists_frame = Frame(self)
         lists_frame.pack(fill=BOTH, expand=True, padx=10, pady=5)
 
@@ -65,13 +65,13 @@ class PZOutfitMaker(tk.Tk):
         button_frame_outfit.pack(side=LEFT, fill=Y)
         self.button_add_to_selected = Button(button_frame_outfit, text="+", command=self.add_to_selected)
         self.button_add_to_selected.pack(pady=20)
-        self.button_remove_from_selected = Button(button_frame_outfit, text="-", command=self.remove_from_selected)
+        self.button_remove_from_selected = Button(button_frame_outfit, text="-", command=self.remove_from_selected, state=DISABLED)
         self.button_remove_from_selected.pack(pady=10)
 
         # Selected Clothing Listbox
         listbox_selected_items_frame = Frame(lists_frame)
         listbox_selected_items_frame.pack(side=LEFT, fill=BOTH, expand=True, padx=(0, 10))
-        Label(listbox_selected_items_frame, text="Outfit").pack(side=TOP)
+        Label(listbox_selected_items_frame, text="Main Clothes").pack(side=TOP)
         self.listbox_selected_items = Listbox(listbox_selected_items_frame, selectmode=SINGLE)
         self.listbox_selected_items.pack(side=LEFT, fill=BOTH, expand=True)
         self.listbox_selected_items.bind('<<ListboxSelect>>', self.selected_item_clicked)
@@ -82,37 +82,45 @@ class PZOutfitMaker(tk.Tk):
         # Sub-item Buttons
         button_frame_sub = Frame(lists_frame)
         button_frame_sub.pack(side=LEFT, fill=Y)
-        self.button_add_to_selected = Button(button_frame_sub, text="+", command=self.add_to_selected_subitem)
-        self.button_add_to_selected.pack(pady=20)
-        self.button_remove_from_selected = Button(button_frame_sub, text="-", command=self.remove_from_selected_subitem)
-        self.button_remove_from_selected.pack(pady=10)
+        self.button_add_to_selected_sub = Button(button_frame_sub, text="+", command=self.add_to_selected_subitem, state=DISABLED)
+        self.button_add_to_selected_sub.pack(pady=20)
+        self.button_remove_from_selected_sub = Button(button_frame_sub, text="-", command=self.remove_from_selected_subitem, state=DISABLED)
+        self.button_remove_from_selected_sub.pack(pady=10)
 
         # Sub-item Listbox
         listbox_sub_items_frame = Frame(lists_frame)
         listbox_sub_items_frame.pack(side=LEFT, fill=BOTH, expand=True, padx=(0,10))
-        self.label_sub_items = Label(listbox_sub_items_frame, text="Subitems")
+        self.label_sub_items = Label(listbox_sub_items_frame, text="Alt: [none selected]")
         self.label_sub_items.pack(side=TOP)
         self.listbox_sub_items = Listbox(listbox_sub_items_frame, selectmode=MULTIPLE)
         self.listbox_sub_items.pack(side=LEFT, fill=BOTH, expand=True)
+        self.listbox_sub_items.bind('<<ListboxSelect>>', self.selected_subitem_clicked)
         scrollbar_sub_items = Scrollbar(listbox_sub_items_frame, orient=VERTICAL, command=self.listbox_sub_items.yview)
         scrollbar_sub_items.pack(side=RIGHT, fill=Y)
         self.listbox_sub_items.config(yscrollcommand=scrollbar_sub_items.set)
     
     def selected_item_clicked(self, event):
+        self.button_remove_from_selected.config(state=DISABLED)
         self.listbox_sub_items.delete(0, END)
         if len(self.listbox_selected_items.curselection()) > 0:
+            self.button_remove_from_selected.config(state=NORMAL)
             self.set_selected_item(self.listbox_selected_items.get(self.listbox_selected_items.curselection()[0]))
         if self.subitems and self.selected_item in self.subitems:
             for item in self.subitems[self.selected_item]:
                 self.listbox_sub_items.insert(END, item)
 
-        
+    def selected_subitem_clicked(self, event):
+        self.button_remove_from_selected_sub.config(state=DISABLED)
+        if len(self.listbox_sub_items.curselection()) > 0:
+            self.button_remove_from_selected_sub.config(state=NORMAL)
     def set_selected_item(self, item):
         self.selected_item = item
         if item:
-            text=f"Subitems for {self.selected_item}"
+            self.button_add_to_selected_sub.config(state=NORMAL)
+            text=f"Alt: {self.selected_item}"
         else:
-            text="Subitems"
+            self.button_add_to_selected_sub.config(state=DISABLED)
+            text="Alt: [none selected]"
         text = text[:23]
         self.label_sub_items.config(text=text)
 
@@ -150,6 +158,7 @@ class PZOutfitMaker(tk.Tk):
             self.subitems[self.selected_item] = self.listbox_sub_items.get(0, END)
         
     def remove_from_selected(self):
+        self.button_remove_from_selected.config(state=DISABLED)
         selection = self.listbox_selected_items.curselection()
         if selection:
             extras = []
