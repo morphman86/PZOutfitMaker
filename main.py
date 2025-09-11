@@ -193,7 +193,7 @@ class PZOutfitMaker(tk.Tk):
     def save_outfit(self):
         selected_items = self.listbox_selected_items.get(0, END)
         name = self.textbox_name.get()
-        writer = FileWriter(name, selected_items, self.itemlist)
+        writer = FileWriter(name, selected_items, self.itemlist, self.subitems)
 
         file_path_outfit = filedialog.asksaveasfilename(defaultextension=".xml", filetypes=[("XML files", "*.xml")])
         male = self.male_var.get()
@@ -203,7 +203,7 @@ class PZOutfitMaker(tk.Tk):
     def save_guidtable(self):
         selected_items = self.listbox_selected_items.get(0, END)
         name = self.textbox_name.get()
-        writer = FileWriter(name, selected_items, self.itemlist)
+        writer = FileWriter(name, selected_items, self.itemlist, self.subitems)
 
         file_path_guidtable = filedialog.asksaveasfilename(defaultextension=".xml", filetypes=[("XML files", "*.xml")])
         writer.write_guidtable(file_path_guidtable)
